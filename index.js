@@ -95,7 +95,6 @@ Client.on('guildMemberRemove', member => {
         .setThumbnail('https://www.shutterstock.com/image-vector/farewell-goodbye-vector-illustration-speech-260nw-1677893592.jpg')
         .addFields(
             { name: 'Nos Vemos', value: 'Esperamos que hayas disfrutado tu tiempo aquí.' },
-            { name: 'Canales Importantes', value: 'No olvides revisar #anuncios y #general para mantenerte al tanto.' },
             { name: 'Roles', value: 'Tu contribución siempre será recordada.' },
             { name: 'ID del Usuario', value: `${member.id}`, inline: true },
             { name: 'Roles del Usuario', value: `${member.roles.cache.map(role => role.name).join(', ')}`, inline: true }
