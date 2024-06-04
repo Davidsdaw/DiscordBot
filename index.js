@@ -55,5 +55,11 @@ Client.on('interactionCreate', async (interaction) => {
     }
 });
 
+Client.on('guildMemberAdd', member => {
+    const channel = member.guild.channels.cache.find(ch => ch.name === 'general');
+    if (!channel) return;
+    channel.send(`¡Hola ${member}, bienvenido a nuestro servidor de Discord!`);
+});
+
 //Conexion
 Client.login(process.env.CLIENT_TOKEN)
