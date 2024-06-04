@@ -85,11 +85,25 @@ Client.on('guildMemberAdd', member => {
 });
 
 //EVENTO PARA CUANDO SE SALE
-// Client.on('guildMemberAdd', member => {
-//     const channel = member.guild.channels.cache.find(ch => ch.id === config.gbId);
-//     if (!channel) return;
-//     channel.send(`¡Hola ${member}, bienvenido a nuestro servidor de Discord!`);
-// });
+Client.on('guildMemberRemove', member => {
+    const channel = member.guild.channels.cache.find(ch => ch.id === config.gbId);
+    if (!channel) return;
+    const embed = new Discord.EmbedBuilder()
+        .setTitle('¡Hasta Luego!')
+        .setDescription(`¡Adiós ${member.displayName}! Sentiremos tu ausencia. Esperamos verte de nuevo pronto.`)
+        .setColor(0xe74c3c)
+        .setThumbnail('https://www.shutterstock.com/image-vector/farewell-goodbye-vector-illustration-speech-260nw-1677893592.jpg')
+        .addFields(
+            { name: 'Nos Vemos', value: 'Esperamos que hayas disfrutado tu tiempo aquí.' },
+            { name: 'Canales Importantes', value: 'No olvides revisar #anuncios y #general para mantenerte al tanto.' },
+            { name: 'Roles', value: 'Tu contribución siempre será recordada.' },
+            { name: 'ID del Usuario', value: `${member.id}`, inline: true },
+            { name: 'Roles del Usuario', value: `${member.roles.cache.map(role => role.name).join(', ')}`, inline: true }
+        )
+        .setFooter({ text: `El usuario se unió el ${member.joinedAt.toLocaleString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}` });
+
+    channel.send({ embeds: [embed] });
+});
 
 
 //Conexion
