@@ -50,3 +50,4 @@ Client.on("interactionCreate", async (interaction) => {
 
 //Conexion
 Client.login(process.env.CLIENT_TOKEN)
+//hola
