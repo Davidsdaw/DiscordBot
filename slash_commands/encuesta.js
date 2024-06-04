@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 
+
 module.exports = {
     data: new Discord.SlashCommandBuilder()
         .setName('encuesta')
@@ -86,5 +87,8 @@ module.exports = {
         }
 
         await interaction.reply({ embeds: [embed], components: [row] });
+        
     },
+
 };
+

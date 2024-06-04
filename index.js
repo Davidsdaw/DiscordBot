@@ -40,9 +40,12 @@ Client.on("ready", async() => {
     console.log("Ando ready")
 })
 
+
+const eventoEncuesta= require('./events/eventoEncuesta');
+
 //Eventos de comandos 
 Client.on('interactionCreate', async (interaction) => {
-    if (interaction.isChatInputCommand()) {
+    if (interaction.isCommand()) {
         const command = Client.commands.get(interaction.commandName);
         if (command) {
             try {
@@ -52,6 +55,9 @@ Client.on('interactionCreate', async (interaction) => {
                 await interaction.reply({ content: 'Hubo un error ejecutando el comando.', ephemeral: true });
             }
         }
+    } else if (interaction.isButton()) {
+        // Aquí es donde manejarías las interacciones de los botones
+        await eventoEncuesta.execute(interaction);
     }
 });
 
