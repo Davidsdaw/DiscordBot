@@ -24,11 +24,19 @@ module.exports = {
             const canalId = interacion.options.getString("idcanal")
             const canal = interacion.guild.channels.cache.get(canalId);
 
-            if (canal && canal.type === 'GUILD_TEXT') {
-                // Enviar el mensaje al canal
-                canal.send(texto)
+            if (canal) { 
+                if(canal.type ==0){
+                        // Enviar el mensaje al canal
+                    canal.send(texto)
                     .then(() => interacion.reply("Mensaje enviado al canal correctamente."))
                     .catch(console.error);
+                }else{
+                    interacion
+                    .reply({ content: "El canal con la ID proporcionada no es un canal de texto.", ephemeral: true })
+                    .then(sentMessage => {setTimeout(() => {sentMessage.delete().catch(console.error)}, 30000)})
+                    .catch(console.error);
+                }
+                
             } else {
                 // Responder si el canal no existe o no es un canal de texto válido y se borra a los 30 segundos
                 interacion
@@ -37,5 +45,5 @@ module.exports = {
                 .catch(console.error);
             }
         },
-        //hola
 };
+
