@@ -20,6 +20,6 @@ module.exports = {
             .setFooter({ text: `El usuario de unio el ${member.joinedAt.toLocaleString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}`});
         
         mensaje.reply({embeds: [embed]})
-        
+        console.log(embed)
     }
 }
