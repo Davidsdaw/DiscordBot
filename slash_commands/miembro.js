@@ -1,7 +1,7 @@
 const Discord = require("discord.js")
 
 module.exports = {
-    Data: new Discord.SlashCommandBuilder()
+    data: new Discord.SlashCommandBuilder()
     .setName('miembro')
     .setDescription('muestra informacion del miembro')
     .addUserOption(option=>option.setName('usuario').setDescription('usuario del server')),
@@ -12,11 +12,12 @@ module.exports = {
         
         if(!member) return mensaje.reply('usuario no valido');
 
-        const avatar=member.getUser.displayAvatarURL({size: 512})
+        const avatar=member.user.displayAvatarURL({size: 512})
         const embed=new Discord.EmbedBuilder()
             .setColor('Blurple')
             .setTitle(`Avatar de ${member.user.displayName}`)
-            .setImage(avatar);
+            .setImage(avatar)
+            .setFooter({ text: `El usuario de unio el ${member.joinedAt.toLocaleString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}`});
         
         mensaje.reply({embeds: [embed]})
         
