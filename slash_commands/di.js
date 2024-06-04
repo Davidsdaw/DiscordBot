@@ -1,10 +1,10 @@
 const Discord = require("discord.js")
-const { execute } = require("./ping")
 
 module.exports = {
     data: new Discord.SlashCommandBuilder()
     .setName("di")
     .setDescription("El bot dirá lo que quieras")
+    .setDefaultMemberPermissions(Discord.PermissionFlagsBits.Administrator)
     .addStringOption((opcion) => 
         opcion
             .setName("mensaje")
@@ -43,6 +43,7 @@ module.exports = {
                 .reply({ content: "No se pudo encontrar el canal con la ID proporcionada o no es un canal de texto válido. Asegúrate de ingresar una ID de canal válida.", ephemeral: true })
                 .then(sentMessage => {setTimeout(() => {sentMessage.delete().catch(console.error)}, 30000)})
                 .catch(console.error);
+                
             }
         },
 };

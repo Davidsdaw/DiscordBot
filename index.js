@@ -41,12 +41,19 @@ Client.on("ready", async() => {
 })
 
 //Eventos de comandos 
-Client.on("interactionCreate", async (interaction) => {
-    if (interaction.isChatInputCommand()){
+Client.on('interactionCreate', async (interaction) => {
+    if (interaction.isChatInputCommand()) {
         const command = Client.commands.get(interaction.commandName);
-        command.execute(interaction).catch(console.error);
+        if (command) {
+            try {
+                await command.execute(interaction, Client);
+            } catch (error) {
+                console.error(error);
+                await interaction.reply({ content: 'Hubo un error ejecutando el comando.', ephemeral: true });
+            }
+        }
     }
-})
+});
 
 //Conexion
 Client.login(process.env.CLIENT_TOKEN)
