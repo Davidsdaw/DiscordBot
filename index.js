@@ -36,7 +36,7 @@ const REST = new Discord.REST().setToken(process.env.CLIENT_TOKEN);
 
 
 //Contenido (events)
-Client.on("ready", async(client) => {
+Client.on("ready", async() => {
     console.log("Ando ready")
 })
 
@@ -50,4 +50,3 @@ Client.on("interactionCreate", async (interaction) => {
 
 //Conexion
 Client.login(process.env.CLIENT_TOKEN)
-//hola
