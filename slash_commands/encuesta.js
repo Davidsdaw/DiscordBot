@@ -1,4 +1,9 @@
 const Discord = require('discord.js');
+const votos =  require('../votos');
+const { actualizarPorcentaje } = require('../actualizarPorcentaje');
+let row;
+let interaction;
+let embed;
 
 
 module.exports = {
@@ -25,14 +30,15 @@ module.exports = {
             option.setName('opcion4')
                 .setDescription('La cuarta opción para la encuesta')
                 .setRequired(false)), // Opción 4 es opcional
-    async execute(interaction) {
+    async execute(inter) {
+        interaction=inter;
         const pregunta = interaction.options.getString('pregunta');
         const opcion1 = interaction.options.getString('opcion1');
         const opcion2 = interaction.options.getString('opcion2');
         const opcion3 = interaction.options.getString('opcion3');
         const opcion4 = interaction.options.getString('opcion4');
 
-        const embed = new Discord.EmbedBuilder()
+        embed = new Discord.EmbedBuilder()
             .setColor('#fc32e1') // Color del embed es blanco
             .setTitle(pregunta);
 
@@ -50,7 +56,10 @@ module.exports = {
             embed.addFields({ name: '--->  4. ' + opcion4, value: '\u200B' });
         }
 
-        const row = new Discord.ActionRowBuilder();
+        actualizarPorcentaje(embed);
+
+        
+        row = new Discord.ActionRowBuilder();
 
         // Añade los botones solo si las opciones correspondientes están proporcionadas
         if (opcion1) {
@@ -66,7 +75,7 @@ module.exports = {
                 new Discord.ButtonBuilder()
                     .setCustomId('opcion2')
                     .setLabel(opcion2)
-                    .setStyle(1)
+                    .setStyle(3)
             );
         }
         if (opcion3) {
@@ -74,7 +83,7 @@ module.exports = {
                 new Discord.ButtonBuilder()
                     .setCustomId('opcion3')
                     .setLabel(opcion3)
-                    .setStyle(1)
+                    .setStyle(4)
             );
         }
         if (opcion4) {
@@ -82,13 +91,15 @@ module.exports = {
                 new Discord.ButtonBuilder()
                     .setCustomId('opcion4')
                     .setLabel(opcion4)
-                    .setStyle(1)
+                    .setStyle(2)
             );
         }
 
         await interaction.reply({ embeds: [embed], components: [row] });
         
     },
-
+    
+    getRow: function() { return row; },
+    getInteraction: function() { return interaction; },
+    getEmbed: function() { return embed; },
 };
-
