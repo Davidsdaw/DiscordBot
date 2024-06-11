@@ -21,32 +21,33 @@ let hanVotado = new Set();
                         hanVotado.add(interaction.user.id);
                         votos['opcion1']++;
                         await interaction.editReply('Gracias por participar');
-                        em = actualizarPorcentaje(mensaje.getEmbed());
+                        em = await actualizarPorcentaje(mensaje.getEmbed());
                     }
                     if (btn === 'opcion2') {
                         hanVotado.add(interaction.user.id);
                         votos['opcion2']++;
                         await interaction.editReply('Gracias por participar');
-                        em = actualizarPorcentaje(mensaje.getEmbed());
+                        em = await actualizarPorcentaje(mensaje.getEmbed());
 
                     }
                     if (btn === 'opcion3') {
+                        hanVotado.add(interaction.user.id);
                         votos['opcion3']++;
                         await interaction.editReply('Gracias por participar');
-                        em = actualizarPorcentaje(mensaje.getEmbed());
+                        em = await actualizarPorcentaje(mensaje.getEmbed());
                     }
                     if (btn === 'opcion4') {
                         hanVotado.add(interaction.user.id);
                         votos['opcion4']++;
                         await interaction.editReply('Gracias por participar');
-                        em = actualizarPorcentaje(mensaje.getEmbed());
+                        em = await actualizarPorcentaje(mensaje.getEmbed());
                     }
                     let r=mensaje.getRow();
                     let i= mensaje.getInteraction();
                     // console.log(r)
                     // console.log(i)
                     // console.log(em)
-                    await i.editReply({ embeds: [em[0]], components: [em[1]] });
+                    await i.editReply({ embeds: [em], components: [r] });
                 }else{
                     await interaction.editReply('Ya has votado, gracias por participar')
                 }

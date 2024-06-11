@@ -44,23 +44,22 @@ module.exports = {
 
         // Añade los campos solo si las opciones correspondientes están proporcionadas
         if (opcion1) {
-            embed.addFields({ name: '--->  1. ' + opcion1, value: '\u200B' });
+            embed.addFields({ name: '1. ', value: opcion1 });
         }
         if (opcion2) {
-            embed.addFields({ name: '--->  2. ' + opcion2, value: '\u200B' });
+            embed.addFields({ name: '2. ', value: opcion2 });
         }
         if (opcion3) {
-            embed.addFields({ name: '--->  3. ' + opcion3, value: '\u200B' });
+            embed.addFields({ name: '3. ', value: opcion3 });
         }
         if (opcion4) {
-            embed.addFields({ name: '--->  4. ' + opcion4, value: '\u200B' });
+            embed.addFields({ name: '4. ', value: opcion4 });
         }
 
         actualizarPorcentaje(embed);
 
         
         row = new Discord.ActionRowBuilder();
-
         // Añade los botones solo si las opciones correspondientes están proporcionadas
         if (opcion1) {
             row.addComponents(
@@ -96,7 +95,6 @@ module.exports = {
         }
 
         await interaction.reply({ embeds: [embed], components: [row] });
-        
     },
     
     getRow: function() { return row; },
