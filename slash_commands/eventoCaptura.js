@@ -10,6 +10,31 @@ module.exports = {
             .setDescription("Descripcion del evento")
             .setRequired(true)
     )
+    .addStringOption((opcion9) => 
+        opcion9
+            .setName("pokemon")
+            .setDescription("Que pokemon capturar")
+            .setRequired(true)
+    )
+    .addStringOption((opcion10) => 
+        opcion10
+            .setName("zona")
+            .setDescription("En que zona aparece el pokemon")
+            .setRequired(true)
+    )
+    .addStringOption((opcion11) => 
+        opcion11
+            .setName("region")
+            .setDescription("En que region aparece el pokemon")
+            .addChoices(
+                { name: 'Kanto', value: 'Kanto' },
+                { name: 'Johto', value: 'Johto' },
+                { name: 'Hoenn', value: 'Hoenn' },
+                { name: 'Sinnoh', value: 'Sinnoh' },
+                { name: 'Teselia', value: 'Teselia' }
+            )
+            .setRequired(true)
+    )
     .addStringOption((opcion2) => 
         opcion2
             .setName("premios")
@@ -66,75 +91,107 @@ module.exports = {
             )
             .setRequired(true)
     ),
-        execute: async (interacion) => {
-            const canalId = "1247333756197408830";
-            const descripcion = interacion.options.getString("descripcion")
-            const premios = interacion.options.getString("premios")
-            const empieza = interacion.options.getString("empieza")
-            const duracion = interacion.options.getString("duracion")
-            const host = interacion.options.getString("host")
-            const participantes = interacion.options.getString("participantes")
-            const requisitos = interacion.options.getString("requisitos")
-            const acabar = interacion.options.getString("acabar")
-            const canal = interacion.guild.channels.cache.get(canalId);
-            const userAvatar = interacion.user.displayAvatarURL({ dynamic: true });
+    execute: async (interacion) => {
+        const canalId = "1247333756197408830";
+        const descripcion = interacion.options.getString("descripcion");
+        const pokemon = interacion.options.getString("pokemon");
+        const zona = interacion.options.getString("zona");
+        const region = interacion.options.getString("region");
+        const premios = interacion.options.getString("premios");
+        const empieza = interacion.options.getString("empieza");
+        const duracion = interacion.options.getString("duracion");
+        const host = interacion.options.getString("host");
+        const participantes = interacion.options.getString("participantes");
+        const requisitos = interacion.options.getString("requisitos");
+        const acabar = interacion.options.getString("acabar");
+        const canal = interacion.guild.channels.cache.get(canalId);
+        const userAvatar = interacion.user.displayAvatarURL({ dynamic: true });
 
-            let premiosArray = premios.split(",");
-            let premioFormato="";
+        let premiosArray = premios.split(",");
+        let premioFormato = premiosArray.join("\n");
 
-            for (let i = 0; i < premiosArray.length; i++) {
-                if((i+1)==premiosArray.length){
-                   premioFormato+=premiosArray[i]
-                }else 
-                premioFormato+=premiosArray[i]+" \n"
+        if (canal.type === 0) {
+
+            // Convertimos empieza y duracion a fecha y hora
+            const fechaInicio = new Date(empieza);
+            const duracionMs = parseDuration(duracion); // Convertimos la duración a milisegundos
+
+            if (!isNaN(fechaInicio) && !isNaN(duracionMs)) {
+                const fechaFin = new Date(fechaInicio.getTime() + duracionMs);
                 
-            }
-            
+                // Crear timestamp para mostrar en embed
+                const timestampEmpieza = Math.floor(fechaInicio.getTime() / 1000);
+                const timestampFin = Math.floor(fechaFin.getTime() / 1000);
 
-                if(canal.type ==0){
-
-                    const mensajeEvento = new Discord.EmbedBuilder()
+                const mensajeEvento = new Discord.EmbedBuilder()
                     .setColor(0x674EA7)
                     .setTitle("🍺¡ Evento **Captura** !🍺")
-
                     .setDescription(descripcion)
                     .setThumbnail(userAvatar)
                     .addFields(
+                        { name: ' POKEMON ', value: pokemon, inline: true },
+                        { name: ' ZONA ', value: zona, inline: true },
+                        { name: ' REGION ', value: region, inline: true },
                         { name: '\u200B', value: '\u200B' },
-                        { name: ' 💰 Premios 💰 ', value: premioFormato},
+                        { name: ' 💰 PREMIOS 💰 ', value: premioFormato, inline: true },
+                        { name: ' 🗺️ Al acabar 🗺️ ', value: acabar, inline: true },
                         { name: '\u200B', value: '\u200B' },
-                        { name: ' 🗺️ Al acabar 🗺️ ', value: acabar,inline: true },
-                        { name: '\u200B', value: '\u200B' },
-                        { name: ' EMPIEZA 🕛 ', value: empieza, inline: true },
+                        { name: ' EMPIEZA 🕛 ', value: `<t:${timestampEmpieza}:F>`, inline: true }, // Usa timestamp
                         { name: ' DURACION ⏲️ ', value: duracion, inline: true },
                         { name: ' HOST 🤖 ', value: host, inline: true },
                         { name: '\u200B', value: '\u200B' },
+                        { name: ' TERMINA 🕛 ', value: `<t:${timestampFin}:F>`, inline: true } // Timestamp de fin
                     )
                     .setImage("https://www.gifsanimados.org/data/media/562/linea-imagen-animada-0538.gif")
                     .addFields(
                         { name: ' 🎮 Pueden participar 🎮 ', value: participantes },
-                        { name: ' ⚒️ Requisitos ⚒️ ', value: requisitos, inline: true  },
+                        { name: ' ⚒️ Requisitos ⚒️ ', value: requisitos, inline: true },
                     )
                     .setTimestamp()
                     .setFooter({
-                        text: "Realizado por : "+ interacion.user.username ,
+                        text: "Realizado por : " + interacion.user.username,
                         iconURL: userAvatar
                     });
 
-                        // Enviar el mensaje al canal
-                    canal.send({embeds: [mensajeEvento]})
-                    interacion.reply({ content: "Mensaje enviado correctamente.", ephemeral: true })
-                    .then(sentMessage => {setTimeout(() => {sentMessage.delete().catch(console.error)}, 10000)})
+                // Enviar el mensaje al canal
+                canal.send({ embeds: [mensajeEvento] })
+                interacion.reply({ content: "Mensaje enviado correctamente.", ephemeral: true })
+                    .then(sentMessage => {
+                        setTimeout(() => { sentMessage.delete().catch(console.error) }, 10000);
+                    })
                     .catch(console.error);
-                }else{
-                    interacion
-                    .reply({ content: "El canal con la ID proporcionada no es un canal de texto.", ephemeral: true })
-                    .then(sentMessage => {setTimeout(() => {sentMessage.delete().catch(console.error)}, 30000)})
-                    .catch(console.error);
+
+                // Calcula el tiempo hasta la finalización y programa el mensaje final
+                const tiempoHastaFin = fechaFin.getTime() - Date.now();
+                if (tiempoHastaFin > 0) {
+                    setTimeout(() => {
+                        canal.send(`EVENTO DE ${pokemon} FINALIZO`);
+                    }, tiempoHastaFin);
                 }
-                
+            } else {
+                console.error("Error: La fecha de inicio o la duración no son válidas.");
             }
-                
-            }
-        
-;
+
+        } else {
+            interacion
+                .reply({ content: "El canal con la ID proporcionada no es un canal de texto.", ephemeral: true })
+                .then(sentMessage => { setTimeout(() => { sentMessage.delete().catch(console.error) }, 30000); })
+                .catch(console.error);
+        }
+
+    }
+};
+
+// Función auxiliar para convertir duraciones como "1d 1h 30m 45s" a milisegundos
+function parseDuration(duracion) {
+    const durationRegex = /(?:(\d+)\s*d\s*)?(?:(\d+)\s*h\s*)?(?:(\d+)\s*m\s*)?(?:(\d+)\s*s\s*)?/;
+    const match = duracion.match(durationRegex);
+    if (!match) return NaN;
+
+    const days = parseInt(match[1]) || 0;
+    const hours = parseInt(match[2]) || 0;
+    const minutes = parseInt(match[3]) || 0;
+    const seconds = parseInt(match[4]) || 0;
+
+    return (days * 24 * 60 * 60 * 1000) + (hours * 60 * 60 * 1000) + (minutes * 60 * 1000) + (seconds * 1000);
+}
